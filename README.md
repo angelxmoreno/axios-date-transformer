@@ -1,7 +1,9 @@
 # axios-date-transformer
 
+[![Maintainability](https://api.codeclimate.com/v1/badges/f9e98576a38e8bfe88c9/maintainability)](https://codeclimate.com/github/angelxmoreno/axios-date-transformer/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/f9e98576a38e8bfe88c9/test_coverage)](https://codeclimate.com/github/angelxmoreno/axios-date-transformer/test_coverage)
 [![codecov](https://codecov.io/gh/angelxmoreno/axios-date-transformer/graph/badge.svg?token=4FRU5EL2J2)](https://codecov.io/gh/angelxmoreno/axios-date-transformer)
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/angelxmoreno/axios-date-transformer/node-ci-codecov)
+[![Build on Main](https://github.com/angelxmoreno/axios-date-transformer/actions/workflows/manual-build.yml/badge.svg)](https://github.com/angelxmoreno/axios-date-transformer/actions/workflows/manual-build.yml)
 [![License](https://img.shields.io/github/license/angelxmoreno/axios-date-transformer?label=License)](https://github.com/angelxmoreno/axios-date-transformer/blob/main/LICENSE)
 [![Last Commit](https://img.shields.io/github/last-commit/angelxmoreno/axios-date-transformer?label=Last%20Commit)](https://github.com/angelxmoreno/axios-date-transformer/commits/main)
 ![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/angelxmoreno/axios-date-transformer)
