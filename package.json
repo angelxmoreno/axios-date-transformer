@@ -1,45 +1,122 @@
 {
-  "name": "axios-date-transformer",
-  "version": "0.0.0",
-  "description": "An Axios transformer for seamlessly converting ISO 8601 formatted date strings with millisecond precision to JavaScript Date objects. Simplify handling of Date objects in JSON responses with this lightweight utility.",
-  "files": [],
-  "scripts": {
-    "prebuild": "rimraf dist",
-    "build": "tsc"
-  },
-  "keywords": [
-    "axios",
-    "transformer",
-    "date",
-    "date-fns",
-    "json",
-    "iso8601"
-  ],
-  "homepage": "https://github.com/angelxmoreno/axios-date-transformer",
-  "bugs": {
-    "url": "https://github.com/angelxmoreno/axios-date-transformer/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/angelxmoreno/axios-date-transformer.git"
-  },
-  "types": "dist/index.d.ts",
-  "main": "dist/index.js",
-  "publishConfig": {
-    "access": "public"
-  },
-  "engines": {
-    "node": ">=10.0.0",
-    "npm": ">=6.0.0"
-  },
-  "author": "Angel S. Moreno <angelxmoreno@gmail.com>",
-  "license": "MIT",
-  "private": false,
-  "dependencies": {
-    "tslib": "^2.6.2"
-  },
-  "devDependencies": {
-    "rimraf": "^5.0.5",
-    "typescript": "^5.3.3"
-  }
+    "name": "axios-date-transformer",
+    "version": "0.0.0",
+    "description": "An Axios transformer for seamlessly converting ISO 8601 formatted date strings with millisecond precision to JavaScript Date objects. Simplify handling of Date objects in JSON responses with this lightweight utility.",
+    "files": [],
+    "scripts": {
+        "prebuild": "rimraf dist",
+        "build": "tsc",
+        "prepare": "husky install",
+        "lint": "eslint . --cache",
+        "lint:fix": "eslint . --cache --fix"
+    },
+    "keywords": [
+        "axios",
+        "transformer",
+        "date",
+        "date-fns",
+        "json",
+        "iso8601"
+    ],
+    "homepage": "https://github.com/angelxmoreno/axios-date-transformer",
+    "bugs": {
+        "url": "https://github.com/angelxmoreno/axios-date-transformer/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/angelxmoreno/axios-date-transformer.git"
+    },
+    "types": "dist/index.d.ts",
+    "main": "dist/index.js",
+    "publishConfig": {
+        "access": "public"
+    },
+    "engines": {
+        "node": ">=10.0.0",
+        "npm": ">=6.0.0"
+    },
+    "author": "Angel S. Moreno <angelxmoreno@gmail.com>",
+    "license": "MIT",
+    "private": false,
+    "dependencies": {
+        "tslib": "^2.6.2"
+    },
+    "devDependencies": {
+        "@commitlint/cli": "^18.5.0",
+        "@commitlint/config-conventional": "^18.5.0",
+        "eslint": "^8.56.0",
+        "eslint-config-universe": "^12.0.0",
+        "eslint-plugin-md": "^1.0.19",
+        "husky": "^8.0.0",
+        "lint-staged": "^15.2.0",
+        "prettier": "^3.2.4",
+        "rimraf": "^5.0.5",
+        "typescript": "^5.3.3"
+    },
+    "eslintConfig": {
+        "root": true,
+        "ignorePatterns": [
+            "**/dist/**"
+        ],
+        "extends": [
+            "universe",
+            "plugin:md/recommended"
+        ],
+        "parser": "@typescript-eslint/parser",
+        "overrides": [
+            {
+                "files": [
+                    "*.json"
+                ],
+                "rules": {
+                    "no-unused-expressions": "off"
+                }
+            },
+            {
+                "files": [
+                    "*.md"
+                ],
+                "parser": "markdown-eslint-parser",
+                "rules": {
+                    "prettier/prettier": [
+                        "error",
+                        {
+                            "parser": "markdown"
+                        }
+                    ]
+                }
+            }
+        ],
+        "rules": {
+            "md/remark": [
+                "error",
+                {
+                    "plugins": [
+                        [
+                            "lint-maximum-line-length",
+                            false
+                        ]
+                    ]
+                }
+            ]
+        }
+    },
+    "prettier": {
+        "singleQuote": true,
+        "trailingComma": "all",
+        "arrowParens": "avoid",
+        "semi": true,
+        "useTabs": false,
+        "tabWidth": 4,
+        "printWidth": 120
+    },
+    "lint-staged": {
+        "*.{ts,json}": "eslint --fix",
+        "*.md": "prettier --write"
+    },
+    "commitlint": {
+        "extends": [
+            "@commitlint/config-conventional"
+        ]
+    }
 }
