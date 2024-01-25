@@ -1,10 +1,7 @@
 name: Build on Main
 
 on:
-  workflow_run:
-    workflows: []
-    types:
-      - manual
+  workflow_dispatch:
 
 jobs:
   build:
