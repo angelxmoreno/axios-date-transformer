@@ -57,7 +57,6 @@
         "axios-mock-adapter": "^1.22.0",
         "eslint": "^8.56.0",
         "eslint-config-universe": "^12.0.0",
-        "eslint-plugin-md": "^1.0.19",
         "husky": "^8.0.0",
         "jest": "^29.7.0",
         "lint-staged": "^15.2.0",
@@ -73,8 +72,7 @@
             "**/dist/**"
         ],
         "extends": [
-            "universe",
-            "plugin:md/recommended"
+            "universe"
         ],
         "parser": "@typescript-eslint/parser",
         "overrides": [
@@ -85,35 +83,9 @@
                 "rules": {
                     "no-unused-expressions": "off"
                 }
-            },
-            {
-                "files": [
-                    "*.md"
-                ],
-                "parser": "markdown-eslint-parser",
-                "rules": {
-                    "prettier/prettier": [
-                        "error",
-                        {
-                            "parser": "markdown"
-                        }
-                    ]
-                }
             }
         ],
-        "rules": {
-            "md/remark": [
-                "error",
-                {
-                    "plugins": [
-                        [
-                            "lint-maximum-line-length",
-                            false
-                        ]
-                    ]
-                }
-            ]
-        }
+        "rules": {}
     },
     "prettier": {
         "singleQuote": true,
@@ -125,8 +97,7 @@
         "printWidth": 120
     },
     "lint-staged": {
-        "*.{ts,json}": "eslint --fix",
-        "*.md": "prettier --write"
+        "*.{ts,json}": "eslint --fix"
     },
     "commitlint": {
         "extends": [
