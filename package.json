@@ -2,9 +2,20 @@
   "name": "axios-date-transformer",
   "version": "0.0.0",
   "description": "An Axios transformer for seamlessly converting ISO 8601 formatted date strings with millisecond precision to JavaScript Date objects. Simplify handling of Date objects in JSON responses with this lightweight utility.",
-  "keywords": ["axios", "transformer", "date", "date-fns", "json", "iso8601"],
-  "homepage": "https://github.com/angelxmoreno/axios-date-transformer",
   "files": [],
+  "scripts": {
+    "prebuild": "rimraf dist",
+    "build": "tsc"
+  },
+  "keywords": [
+    "axios",
+    "transformer",
+    "date",
+    "date-fns",
+    "json",
+    "iso8601"
+  ],
+  "homepage": "https://github.com/angelxmoreno/axios-date-transformer",
   "bugs": {
     "url": "https://github.com/angelxmoreno/axios-date-transformer/issues"
   },
@@ -24,5 +35,11 @@
   "author": "Angel S. Moreno <angelxmoreno@gmail.com>",
   "license": "MIT",
   "private": false,
-  "devDependencies": {}
+  "dependencies": {
+    "tslib": "^2.6.2"
+  },
+  "devDependencies": {
+    "rimraf": "^5.0.5",
+    "typescript": "^5.3.3"
+  }
 }
