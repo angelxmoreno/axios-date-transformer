@@ -47,7 +47,7 @@ import { addAxiosDateTransformer } from 'axios-date-transformer';
 const axiosInstance = axios.create({
     baseURL: 'https://example.org',
 });
-const axiosWithTransformer = createAxiosDateTransformer(axiosInstance);
+const axiosWithTransformer = addAxiosDateTransformer(axiosInstance);
 
 // Use axiosInstance for your requests
 axiosWithTransformer

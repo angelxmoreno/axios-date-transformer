@@ -2,7 +2,11 @@
     "name": "axios-date-transformer",
     "version": "0.0.0",
     "description": "An Axios transformer for seamlessly converting ISO 8601 formatted date strings with millisecond precision to JavaScript Date objects. Simplify handling of Date objects in JSON responses with this lightweight utility.",
-    "files": [],
+    "files": [
+        "dist",
+        "LICENSE",
+        "README.md"
+    ],
     "scripts": {
         "prebuild": "rimraf dist",
         "build": "tsc",
