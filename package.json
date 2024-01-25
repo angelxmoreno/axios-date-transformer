@@ -39,7 +39,7 @@
         "access": "public"
     },
     "engines": {
-        "node": ">=14",
+        "node": ">=18",
         "yarn": ">=1.0.0"
     },
     "author": "Angel S. Moreno <angelxmoreno@gmail.com>",
