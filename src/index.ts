@@ -7,12 +7,10 @@ interface DateTransformerConfig<T = any> extends CreateAxiosDefaults<T> {
 const recursiveDateConversion = (data: any): any => {
     if (typeof data === 'object') {
         for (const key in data) {
-            if (Object.prototype.hasOwnProperty.call(data, key)) {
-                if (typeof data[key] === 'string' && isDateString(data[key])) {
-                    data[key] = new Date(data[key]);
-                } else if (typeof data[key] === 'object') {
-                    data[key] = recursiveDateConversion(data[key]);
-                }
+            if (typeof data[key] === 'string' && isDateString(data[key])) {
+                data[key] = new Date(data[key]);
+            } else if (typeof data[key] === 'object') {
+                data[key] = recursiveDateConversion(data[key]);
             }
         }
     }
