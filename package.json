@@ -12,6 +12,7 @@
         "build": "tsc",
         "prepare": "husky install",
         "test": "jest",
+        "test:coverage": "jest --coverage",
         "lint": "eslint . --cache",
         "lint:fix": "eslint . --cache --fix",
         "release": "release-it"
