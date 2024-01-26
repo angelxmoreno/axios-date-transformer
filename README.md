@@ -6,7 +6,7 @@
 [![Build on Main](https://github.com/angelxmoreno/axios-date-transformer/actions/workflows/manual-build.yml/badge.svg)](https://github.com/angelxmoreno/axios-date-transformer/actions/workflows/manual-build.yml)
 [![License](https://img.shields.io/github/license/angelxmoreno/axios-date-transformer?label=License)](https://github.com/angelxmoreno/axios-date-transformer/blob/main/LICENSE)
 [![Last Commit](https://img.shields.io/github/last-commit/angelxmoreno/axios-date-transformer?label=Last%20Commit)](https://github.com/angelxmoreno/axios-date-transformer/commits/main)
-![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/angelxmoreno/axios-date-transformer)
+[![dependencies](https://img.shields.io/librariesio/release/npm/axios-date-transformer?color=%23007a1f&style=flat-square)](https://libraries.io/npm/axios-date-transformer)
 
 An Axios transformer for seamlessly converting ISO 8601 formatted date strings with millisecond precision to JavaScript Date objects. Simplify handling of Date objects in JSON responses with this lightweight utility.
 
