@@ -23,8 +23,10 @@ const isDateString = (value: any): boolean => {
     return dateRegex.test(value);
 };
 
-const transformDates = (response: AxiosResponse): AxiosResponse => {
-    response.data = recursiveDateConversion(response.data);
+const transformDates = <T = any>(response: AxiosResponse<T>): AxiosResponse<T> => {
+    if (response.data) {
+        response.data = recursiveDateConversion(response.data);
+    }
 
     return response;
 };
