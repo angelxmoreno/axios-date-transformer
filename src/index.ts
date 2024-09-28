@@ -4,6 +4,8 @@ interface DateTransformerConfig<T = any> extends CreateAxiosDefaults<T> {
     // placeholder interface for future configuration
 }
 
+const dateRegex = /^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(?:\.\d*)?(?:[-+]\d{2}:?\d{2}|Z)?)?$/;
+
 const recursiveDateConversion = (data: any): any => {
     if (typeof data === 'object') {
         for (const key in data) {
@@ -19,7 +21,6 @@ const recursiveDateConversion = (data: any): any => {
 };
 
 const isDateString = (value: any): boolean => {
-    const dateRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d*)?(?:[-+]\d{2}:?\d{2}|Z)?$/;
     return dateRegex.test(value);
 };
 
