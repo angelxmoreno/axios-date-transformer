@@ -1,48 +1,128 @@
+import axios, { AxiosInstance } from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 
-import { createAxiosDateTransformer } from './index';
+import { addAxiosDateTransformer, createAxiosDateTransformer } from './index';
+
+/**
+ * Helper function to create a mock adapter and mock a GET request.
+ * @param axiosInstance - The Axios instance to mock.
+ * @param url - The endpoint URL to mock.
+ * @param jsonResponse - The JSON response to return.
+ */
+const createMockAdapter = (axiosInstance: AxiosInstance, url: string, jsonResponse: string) => {
+    const mock = new MockAdapter(axiosInstance);
+    mock.onGet(url).reply(200, jsonResponse);
+    return mock;
+};
+
+/**
+ * Helper function to initialize a date-aware Axios instance.
+ * @param baseURL - The base URL for the Axios instance.
+ * @param allowlist - An optional allowlist for fields to convert.
+ * @returns A configured Axios instance with the date transformer applied.
+ */
+const initializeAxiosInstance = (baseURL: string, allowlist?: string[]): AxiosInstance => {
+    const axiosConfig = { baseURL };
+    return allowlist
+        ? addAxiosDateTransformer(axios.create(axiosConfig), { allowlist })
+        : createAxiosDateTransformer(axiosConfig);
+};
+
+/**
+ * Helper function to assert that a field is correctly converted to a Date object.
+ * @param field - The field to check.
+ * @param expectedDate - The expected Date object.
+ */
+const assertDateConversion = (field: any, expectedDate: Date) => {
+    expect(field).toBeInstanceOf(Date);
+    expect(field.toISOString()).toEqual(expectedDate.toISOString());
+};
+
+/**
+ * Helper function to assert that a field remains a string and has the expected value.
+ * @param field - The field to check.
+ * @param expectedValue - The expected string value.
+ */
+const assertStringValue = (field: any, expectedValue: string) => {
+    expect(typeof field).toBe('string');
+    expect(field).toEqual(expectedValue);
+};
 
 describe('axios-date-transformer', () => {
-    test('transforms date strings to Date objects', async () => {
-        const originalObject = {
-            name: 'John Doe',
-            dob: '1980-01-25',
-            issues: {
-                alpha: new Date('2022-01-25T12:30:00.000Z'),
-                beta: new Date('2022-01-26T09:45:00.000Z'),
+    const baseURL = 'https://example.org';
+    const url = '/api/data';
+
+    // Combined test object covering various scenarios: strings, nested objects, arrays, and multiple date fields
+    const originalObject = {
+        name: 'John Doe',
+        dob: '1980-01-25',
+        joinedAt: '2023-09-28T12:00:00Z',
+        issues: {
+            alpha: '2022-01-25T12:30:00.000Z',
+            beta: new Date('2024-01-26T09:45:00.000Z'),
+        },
+        users: [
+            {
+                id: '123',
+                registeredAt: '2023-09-28T12:00:00Z',
+                events: [
+                    {
+                        eventId: 'abc',
+                        eventDate: '2023-10-01T09:00:00Z',
+                    },
+                ],
             },
-        };
-        const jsonResponse = JSON.stringify(originalObject);
-        const axiosInstance = createAxiosDateTransformer({
-            baseURL: 'https://example.org',
-        });
+        ],
+    };
+    const jsonResponse = JSON.stringify(originalObject);
 
-        // Create a mock adapter for the axios instance
-        const mock = new MockAdapter(axiosInstance);
+    test('transforms date strings to Date objects for all fields', async () => {
+        const axiosInstance = initializeAxiosInstance(baseURL);
 
-        // Mock the axios request with the resolved value
-        mock.onGet('/api/data').reply(200, jsonResponse);
+        // Create a mock adapter for the Axios instance
+        const mock = createMockAdapter(axiosInstance, url, jsonResponse);
 
         // Make the request
-        const { data } = await axiosInstance.get('/api/data');
+        const { data } = await axiosInstance.get(url);
 
-        // Assert that the 'dob' property is an instance of Date
-        expect(data.dob).toBeInstanceOf(Date);
+        // Assert conversions for top-level date fields
+        assertDateConversion(data.dob, new Date(originalObject.dob));
+        assertDateConversion(data.joinedAt, new Date(originalObject.joinedAt));
 
-        // Assert that the date value of 'data.dob' is the same as 'response.dob'
-        expect(data.dob.toISOString()).toEqual(new Date(originalObject.dob).toISOString());
+        // Assert conversions for nested object fields
+        assertDateConversion(data.issues.alpha, new Date(originalObject.issues.alpha));
+        assertDateConversion(data.issues.beta, originalObject.issues.beta);
 
-        // Assert that the 'issues.alpha' property is an instance of Date
-        expect(data.issues.alpha).toBeInstanceOf(Date);
+        // Assert conversions for arrays and nested dates
+        expect(Array.isArray(data.users)).toBe(true);
+        assertDateConversion(data.users[0].registeredAt, new Date(originalObject.users[0].registeredAt));
+        assertDateConversion(data.users[0].events[0].eventDate, new Date(originalObject.users[0].events[0].eventDate));
 
-        // Assert that the date value of 'data.issues.alpha' is the same as 'response.issues.alpha'
-        expect(data.issues.alpha.toISOString()).toEqual(originalObject.issues.alpha.toISOString());
+        // Restore the mock adapter
+        mock.restore();
+    });
 
-        // Assert that the 'issues.beta' property is an instance of Date
-        expect(data.issues.beta).toBeInstanceOf(Date);
+    test('transforms only date strings in the allowlist', async () => {
+        const allowlist = ['beta', 'registeredAt'];
+        const axiosInstance = initializeAxiosInstance(baseURL, allowlist);
 
-        // Assert that the date value of 'data.issues.beta' is the same as 'response.issues.beta'
-        expect(data.issues.beta.toISOString()).toEqual(originalObject.issues.beta.toISOString());
+        // Create a mock adapter for the Axios instance
+        const mock = createMockAdapter(axiosInstance, url, jsonResponse);
+
+        // Make the request
+        const { data } = await axiosInstance.get(url);
+
+        // Assert that non-allowlisted fields remain as strings
+        assertStringValue(data.dob, originalObject.dob);
+        assertStringValue(data.joinedAt, originalObject.joinedAt);
+        assertStringValue(data.issues.alpha, originalObject.issues.alpha);
+
+        // Assert that only the allowlisted fields are converted to Date objects
+        assertDateConversion(data.issues.beta, originalObject.issues.beta);
+        assertDateConversion(data.users[0].registeredAt, new Date(originalObject.users[0].registeredAt));
+
+        // Assert that eventDate, which is not in the allowlist, remains a string
+        assertStringValue(data.users[0].events[0].eventDate, originalObject.users[0].events[0].eventDate);
 
         // Restore the mock adapter
         mock.restore();

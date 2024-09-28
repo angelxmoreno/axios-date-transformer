@@ -22,6 +22,12 @@ or
 yarn add axios-date-transformer
 ```
 
+or
+
+```sh
+bun i axios-date-transformer
+```
+
 ## Usage
 
 ### Creating a new axios instance
@@ -40,8 +46,7 @@ axiosInstance
     .then(response => {
         // Date strings in the response data are automatically converted to Date objects
         console.log(response.data);
-    })
-    .catch(error => {
+    }).catch(error => {
         console.error(error);
     });
 ```
@@ -63,13 +68,51 @@ axiosWithTransformer
     .then(response => {
         // Date strings in the response data are automatically converted to Date objects
         console.log(response.data);
-    })
-    .catch(error => {
+    }).catch(error => {
         console.error(error);
     });
 ```
 
-## Contributing
+### Using the `allowlist` Feature
+
+The `allowlist` feature allows you to specify which fields in the response should be converted to `Date` objects. This option is useful when only certain fields need to be treated as dates, and it prevents unintended transformations of other fields that match the ISO 8601 date format.
+
+```ts
+import { createAxiosDateTransformer } from 'axios-date-transformer';
+
+// Create an Axios instance with the date transformer and an allowlist
+const axiosInstance = createAxiosDateTransformer({
+    baseURL: 'https://example.org',
+    allowlist: ['createdAt', 'updatedAt'], // Only convert these fields to Date objects
+});
+
+axiosInstance.get('/api/data').then(response => {
+    console.log(response.data);
+});
+```
+
+### Default Behavior without the `allowlist` Option
+
+If no `allowlist` is specified, all fields matching the ISO 8601 date format (e.g., `YYYY-MM-DDTHH:mm:ss.sssZ`) will be converted to `Date` objects. This can lead to unintended conversions for fields that look like dates but are actually strings meant to be used as IDs, usernames, or other non-date fields.
+
+#### Potential Issue without `allowlist`
+
+If you have fields that visually match the date format but are not intended to be `Date` objects, those fields will also be transformed. For example:
+
+```json
+{
+  "username": "1980-01-25T00:00:00Z",
+  "createdAt": "2023-09-28T12:00:00Z"
+}
+```
+
+In the above response, `username` is likely meant to be a string, but the transformer will convert it to a `Date` object, causing unexpected behavior in your application.
+
+#### Acknowledgment
+
+Thanks to [@OlliL](https://github.com/OlliL) for highlighting this potential issue in [issue #11](https://github.com/angelxmoreno/axios-date-transformer/issues/11).
+
+### Contributing
 
 If you find a bug or have an enhancement suggestion, feel free to open an issue or submit a pull request. Contributions are welcome!
 
