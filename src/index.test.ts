@@ -51,17 +51,32 @@ const assertStringValue = (field: any, expectedValue: string) => {
 describe('axios-date-transformer', () => {
     const baseURL = 'https://example.org';
     const url = '/api/data';
+
+    // Combined test object covering various scenarios: strings, nested objects, arrays, and multiple date fields
     const originalObject = {
         name: 'John Doe',
         dob: '1980-01-25',
+        joinedAt: '2023-09-28T12:00:00Z',
         issues: {
-            alpha: new Date('2022-01-25T12:30:00.000Z'),
+            alpha: '2022-01-25T12:30:00.000Z',
             beta: new Date('2024-01-26T09:45:00.000Z'),
         },
+        users: [
+            {
+                id: '123',
+                registeredAt: '2023-09-28T12:00:00Z',
+                events: [
+                    {
+                        eventId: 'abc',
+                        eventDate: '2023-10-01T09:00:00Z',
+                    },
+                ],
+            },
+        ],
     };
     const jsonResponse = JSON.stringify(originalObject);
 
-    test('transforms date strings to Date objects', async () => {
+    test('transforms date strings to Date objects for all fields', async () => {
         const axiosInstance = initializeAxiosInstance(baseURL);
 
         // Create a mock adapter for the Axios instance
@@ -70,17 +85,25 @@ describe('axios-date-transformer', () => {
         // Make the request
         const { data } = await axiosInstance.get(url);
 
-        // Assert conversions
+        // Assert conversions for top-level date fields
         assertDateConversion(data.dob, new Date(originalObject.dob));
-        assertDateConversion(data.issues.alpha, originalObject.issues.alpha);
+        assertDateConversion(data.joinedAt, new Date(originalObject.joinedAt));
+
+        // Assert conversions for nested object fields
+        assertDateConversion(data.issues.alpha, new Date(originalObject.issues.alpha));
         assertDateConversion(data.issues.beta, originalObject.issues.beta);
+
+        // Assert conversions for arrays and nested dates
+        expect(Array.isArray(data.users)).toBe(true);
+        assertDateConversion(data.users[0].registeredAt, new Date(originalObject.users[0].registeredAt));
+        assertDateConversion(data.users[0].events[0].eventDate, new Date(originalObject.users[0].events[0].eventDate));
 
         // Restore the mock adapter
         mock.restore();
     });
 
     test('transforms only date strings in the allowlist', async () => {
-        const allowlist = ['beta'];
+        const allowlist = ['beta', 'registeredAt'];
         const axiosInstance = initializeAxiosInstance(baseURL, allowlist);
 
         // Create a mock adapter for the Axios instance
@@ -91,10 +114,15 @@ describe('axios-date-transformer', () => {
 
         // Assert that non-allowlisted fields remain as strings
         assertStringValue(data.dob, originalObject.dob);
-        assertStringValue(data.issues.alpha, originalObject.issues.alpha.toISOString());
+        assertStringValue(data.joinedAt, originalObject.joinedAt);
+        assertStringValue(data.issues.alpha, originalObject.issues.alpha);
 
-        // Assert that only the allowlisted field is converted to a Date object
+        // Assert that only the allowlisted fields are converted to Date objects
         assertDateConversion(data.issues.beta, originalObject.issues.beta);
+        assertDateConversion(data.users[0].registeredAt, new Date(originalObject.users[0].registeredAt));
+
+        // Assert that eventDate, which is not in the allowlist, remains a string
+        assertStringValue(data.users[0].events[0].eventDate, originalObject.users[0].events[0].eventDate);
 
         // Restore the mock adapter
         mock.restore();
