@@ -36,7 +36,8 @@
     "types": "dist/index.d.ts",
     "main": "dist/index.js",
     "publishConfig": {
-        "access": "public"
+        "access": "public",
+        "registry": "https://registry.npmjs.org"
     },
     "engines": {
         "node": ">=18",
@@ -109,9 +110,6 @@
         "testEnvironment": "node"
     },
     "release-it": {
-        "publishConfig": {
-            "registry": "https://registry.npmjs.org"
-        },
         "git": {
             "commitMessage": "chore: release v${version}"
         },
