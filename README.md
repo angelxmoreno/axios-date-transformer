@@ -10,6 +10,8 @@
 
 An Axios transformer for seamlessly converting ISO 8601 formatted date strings with millisecond precision to JavaScript Date objects. Simplify handling of Date objects in JSON responses with this lightweight utility.
 
+The transformer safely skips `null` values while recursively traversing response objects.
+
 ## Installation
 
 ```sh

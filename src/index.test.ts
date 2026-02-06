@@ -102,6 +102,39 @@ describe('axios-date-transformer', () => {
         mock.restore();
     });
 
+    test('returns null response data unchanged', async () => {
+        const axiosInstance = initializeAxiosInstance(baseURL);
+        const mock = createMockAdapter(axiosInstance, url, 'null');
+
+        const { data } = await axiosInstance.get(url);
+
+        expect(data).toBeNull();
+
+        mock.restore();
+    });
+
+    test('handles nested null fields without throwing', async () => {
+        const axiosInstance = initializeAxiosInstance(baseURL);
+        const payloadWithNulls = JSON.stringify({
+            createdAt: '2024-01-26T09:45:00.000Z',
+            meta: null,
+            nested: {
+                lastSeenAt: '2024-01-26T09:45:00.000Z',
+                profile: null,
+            },
+        });
+        const mock = createMockAdapter(axiosInstance, url, payloadWithNulls);
+
+        const { data } = await axiosInstance.get(url);
+
+        assertDateConversion(data.createdAt, new Date('2024-01-26T09:45:00.000Z'));
+        expect(data.meta).toBeNull();
+        assertDateConversion(data.nested.lastSeenAt, new Date('2024-01-26T09:45:00.000Z'));
+        expect(data.nested.profile).toBeNull();
+
+        mock.restore();
+    });
+
     test('transforms only date strings in the allowlist', async () => {
         const allowlist = ['beta', 'registeredAt'];
         const axiosInstance = initializeAxiosInstance(baseURL, allowlist);

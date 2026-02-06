@@ -56,13 +56,15 @@ const shouldConvert = (key: string, value: any, allowlist?: string[]): boolean =
  * @returns The transformed data with Date objects where applicable.
  */
 const recursiveDateConversion = (data: any, allowlist?: string[]): any => {
-    if (typeof data === 'object') {
-        for (const key in data) {
-            if (shouldConvert(key, data[key], allowlist)) {
-                data[key] = new Date(data[key]);
-            } else if (typeof data[key] === 'object') {
-                data[key] = recursiveDateConversion(data[key], allowlist);
-            }
+    if (!data || typeof data !== 'object') {
+        return data;
+    }
+
+    for (const key in data) {
+        if (shouldConvert(key, data[key], allowlist)) {
+            data[key] = new Date(data[key]);
+        } else if (typeof data[key] === 'object') {
+            data[key] = recursiveDateConversion(data[key], allowlist);
         }
     }
 
